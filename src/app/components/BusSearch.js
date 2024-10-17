@@ -1,42 +1,103 @@
-"use client";  // Mark this component as a Client Component
+"use client";
+import React, { useState, useEffect, use } from "react";
+import usePlaces from "../hooks/usePlaces"; // Custom hook to fetch and cache places
+import useSearch from "../hooks/useSearch";
+import PlaceSuggestions from "./PlaceSuggestions"; // Import the new component
+import router from "next/navigation";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation in the app directory
+const BusSearch = () => {
+  const [source, setSource] = useState("");
+  const [destination, setDestination] = useState("");
+  const [sourceSuggestions, setSourceSuggestions] = useState([]);
+  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+  const places = usePlaces(); // Fetch and cache places data
 
-export default function BusSearch() {
-  const [source, setSource] = useState('');
-  const [destination, setDestination] = useState('');
-  const router = useRouter();
+  useEffect(() => {
+    // Filter source suggestions
+    if (source) {
+      const filtered = places.filter((place) =>
+        place.name.toLowerCase().includes(source.toLowerCase())
+      );
+      setSourceSuggestions(filtered);
+    } else {
+      setSourceSuggestions([]);
+    }
+  }, [source, places]);
+
+  useEffect(() => {
+    // Filter destination suggestions
+    if (destination) {
+      const filtered = places.filter((place) =>
+        place.name.toLowerCase().includes(destination.toLowerCase())
+      );
+      setDestinationSuggestions(filtered);
+    } else {
+      setDestinationSuggestions([]);
+    }
+  }, [destination, places]);
+
+  const handleSourceSelect = (place) => {
+    setSource(place.name);  // Set the selected source
+    setSourceSuggestions([]);  // Clear the suggestions after selection
+  };
+
+  const handleDestinationSelect = (place) => {
+    setDestination(place.name);  // Set the selected destination
+    setDestinationSuggestions([]);  // Clear the suggestions after selection
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Redirect to search page with source and destination as query params
-    router.push(`/search?source=${source}&destination=${destination}`);
+    if (source && destination) {
+      const sourceId = places.find((p) => p.name === source)?.id;
+      const destinationId = places.find((p) => p.name === destination)?.id;
+      if (sourceId && destinationId) {
+        const url = useSearch(sourceId, destinationId);
+        router.push(url);
+      }
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white shadow-md rounded">
-      <div className="mb-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="relative">
         <label className="block mb-2">Source:</label>
         <input
           type="text"
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={source}
           onChange={(e) => setSource(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
+          placeholder="Enter source"
+        />
+        <PlaceSuggestions
+          suggestions={sourceSuggestions}
+          onSelect={handleSourceSelect}
         />
       </div>
-      <div className="mb-4">
+
+      <div className="relative mt-4">
         <label className="block mb-2">Destination:</label>
         <input
           type="text"
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
+          placeholder="Enter destination"
+        />
+        <PlaceSuggestions
+          suggestions={destinationSuggestions}
+          onSelect={handleDestinationSelect}
         />
       </div>
-      <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-800">
+
+      <button
+        type="submit"
+        className="bg-blue-500 text-white py-2 px-4 rounded"
+      >
         Search Buses
       </button>
     </form>
   );
-}
+};
+
+export default BusSearch;

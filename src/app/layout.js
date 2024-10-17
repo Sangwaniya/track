@@ -1,16 +1,26 @@
-import './globals.css';
+import React from 'react';
 import Header from './components/Header';
+import './globals.css'; // Assuming you have global styles here
 
-export default function RootLayout({ children }) {
+export const metadata = {
+  title: 'Bus Live Tracking App',
+  description: 'Track buses in real-time with our live tracking system',
+};
+
+export default function Layout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100">
-        {/* Render Header globally */}
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* You can add more meta tags here */}
+        <link rel="icon" href="/favicon.ico" />
+        <title>{metadata.title}</title>
+      </head>
+      <body>
         <Header />
-        {/* Render page-specific content */}
-        <div className="container mx-auto p-4">
+        <main className="p-4">
           {children}
-        </div>
+        </main>
       </body>
     </html>
   );

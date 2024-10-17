@@ -1,12 +1,18 @@
-export default async function handler(req, res) {
-    const { source, destination } = req.query;
-  
-    // Example: Replace with a real API call to fetch bus data
-    const busData = [
-      { id: 1, seats: 15, liveLocation: { lat: 40.712776, lng: -74.005974 } },
-      { id: 2, seats: 12, liveLocation: { lat: 40.73061, lng: -73.935242 } },
-    ];
-  
-    res.status(200).json(busData);
+const BASE_URL = 'http://http://localhost:8888'; 
+
+export const fetchPlaces = async () => {
+  const response = await fetch(`${BASE_URL}/api/places`); 
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to fetch buses');
   }
-  
+  return response.json();
+};
+
+export const fetchRoutes = async (source, destination) => {
+  const response = await fetch(`${BASE_URL}/api/search/${id}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch bus data');
+  }
+  return response.json();
+};
