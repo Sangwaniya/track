@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
-import usePlaces from "../hooks/usePlaces"; // Custom hook to fetch and cache places
-import useSearch from "../hooks/useSearch";
+import usePlaces from "../api/places"; // Custom hook to fetch and cache places
 import PlaceSuggestions from "./PlaceSuggestions"; // Import the new component
-import router from "next/navigation";
 
-const BusSearch = () => {
+const BusSearch = ({ onSubmit }) => {
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [sourceSuggestions, setSourceSuggestions] = useState([]);
@@ -47,15 +45,13 @@ const BusSearch = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (source && destination) {
-      const sourceId = places.find((p) => p.name === source)?.id;
-      const destinationId = places.find((p) => p.name === destination)?.id;
-      if (sourceId && destinationId) {
-        const url = useSearch(sourceId, destinationId);
-        router.push(url);
-      }
-    }
+    const selectedPlace = {
+      source: places.find((p) => p.name === source)?.id,
+      destination: places.find((p) => p.name === destination)?.id,
+    };
+
+    onSubmit(selectedPlace);
+
   };
 
   return (

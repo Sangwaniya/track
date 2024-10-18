@@ -1,8 +1,8 @@
-export default async function handler(req, res) {
+export default async function seachHandler(req, res) {
     const { source, destination } = req.query;
   
     try {
-      const response = await fetch(`http://localhost:3000/search?source=${source}&destination=${destination}`);
+      const response = await fetch(`http://localhost:8888/search?source=${source}&destination=${destination}`);
       const routes = await response.json();
       res.status(200).json(routes);
     } catch (error) {

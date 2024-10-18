@@ -6,7 +6,7 @@ const useSearch = (sourceId, destinationId) => {
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/search?source=${sourceId}&destination=${destinationId}`);
+        const response = await fetch(`/search?source=${sourceId}&destination=${destinationId}`);
         const data = await response.json();
         setRoutes(data);
       } catch (error) {

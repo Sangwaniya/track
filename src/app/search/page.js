@@ -1,12 +1,18 @@
-import { useRouter } from 'next/router';
+"use client";
+
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import useSearch from '../hooks/useSearch';
+import seachHandler from '../api/search';
 import RouteCard from '../components/RouteCard';
 import RouteDetails from '../components/RouteDetails';
 
-const SearchPage = () => {
+const SearchPage = (req, res) => {
   const router = useRouter();
-  const { source, destination } = router.query; // Get source and destination from query params
+  const { query } = router;
+  // const [routes, setRoutes] = useState([]);
+  const source = req.source; // Get source and destination from query params
+  const destination = req.destination;
   const [selectedRoute, setSelectedRoute] = useState(null); // To show detailed stops when a route is clicked
   const routes = useSearch(source, destination); // Fetch routes based on source and destination
 
