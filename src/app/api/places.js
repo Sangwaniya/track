@@ -9,7 +9,7 @@ const usePlaces = () => {
       if (cached) {
         setPlaces(JSON.parse(cached));
       } else {
-        const response = await fetch('http://localhost:8888/api/places');
+        const response = await fetch('http://3.82.222.78:8080/api/places');
         const data = await response.json();
         setPlaces(data);
         localStorage.setItem('places', JSON.stringify(data));

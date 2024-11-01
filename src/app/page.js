@@ -8,7 +8,7 @@ export default function HomePage() {
     const { source, destination } = selectedPlace;
     if (source && destination) {
       router.push({
-        pathname: '/search',
+        pathname: `/search?source=${source}&destination=${destination}`,
         query: { source: routeData.source, destination: routeData.destination },
       });
     }

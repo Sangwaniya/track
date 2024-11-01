@@ -1,14 +1,23 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
-import usePlaces from "../api/places"; // Custom hook to fetch and cache places
+import {fetchPlaces} from "../api/fatchData"; // Custom hook to fetch and cache places
 import PlaceSuggestions from "./PlaceSuggestions"; // Import the new component
+import { useRouter } from "next/navigation";
 
-const BusSearch = ({ onSubmit }) => {
+// const fetchPlaces = async () => {
+//   const response = await fetch('http://localhost:8888/api/places');
+//   const data = await response.json();
+//   return data;
+// };
+const BusSearch = ({ handleSearch }) => {
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [sourceSuggestions, setSourceSuggestions] = useState([]);
   const [destinationSuggestions, setDestinationSuggestions] = useState([]);
-  const places = usePlaces(); // Fetch and cache places data
+  const [places, setPlaces] = useState([]);
+  const router = useRouter();
+  // const data =  fetchPlaces().json();
+  // setPlaces(data);
 
   useEffect(() => {
     // Filter source suggestions
@@ -21,6 +30,18 @@ const BusSearch = ({ onSubmit }) => {
       setSourceSuggestions([]);
     }
   }, [source, places]);
+  useEffect(() => {
+    async function fetchPlaces() {
+      try {
+        const response = await fetch('http://3.82.222.78:8080/api/places');
+        const data = await response.json();
+        setPlaces(data);
+      } catch (error) {
+        console.error('Error fetching places:', error);
+      }
+    }
+    fetchPlaces(); // Ensure this is called only once when the component mounts
+  }, []);
 
   useEffect(() => {
     // Filter destination suggestions
@@ -45,12 +66,12 @@ const BusSearch = ({ onSubmit }) => {
   };
 
   const handleSubmit = (e) => {
-    const selectedPlace = {
-      source: places.find((p) => p.name === source)?.id,
-      destination: places.find((p) => p.name === destination)?.id,
-    };
-
-    onSubmit(selectedPlace);
+    e.preventDefault();
+    const sourceId = places.find((p) => p.name === source)?.id;
+    const destinationId = places.find((p) => p.name === destination)?.id;
+    if (sourceId && destinationId) {
+      router.push(`/search?source=${sourceId}&destination=${destinationId}`);
+    }
 
   };
 
@@ -89,6 +110,7 @@ const BusSearch = ({ onSubmit }) => {
       <button
         type="submit"
         className="bg-blue-500 text-white py-2 px-4 rounded"
+        onClick={handleSubmit}
       >
         Search Buses
       </button>
