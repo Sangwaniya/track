@@ -1,0 +1,48 @@
+[
+    {
+        "id": 1,
+        "stops": [
+            {
+                "id": 1,
+                "expectedAt": "2025-10-01T08:00:00",
+                "place": {
+                    "id": 1,
+                    "name": "Gurugram",
+                    "location": "Haryana"
+                }
+            },
+            {
+                "id": 2,
+                "expectedAt": "2025-10-01T08:15:00",
+                "place": {
+                    "id": 2,
+                    "name": "Faridabad",
+                    "location": "Haryana"
+                }
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "stops": [
+            {
+                "id": 3,
+                "expectedAt": "2025-10-02T10:00:00",
+                "place": {
+                    "id": 3,
+                    "name": "Delhi",
+                    "location": "Delhi"
+                }
+            },
+            {
+                "id": 1,
+                "expectedAt": "2025-10-02T11:00:00",
+                "place": {
+                    "id": 1,
+                    "name": "Gurugram",
+                    "location": "Haryana"
+                }
+            }
+        ]
+    }
+]
