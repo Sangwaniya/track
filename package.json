@@ -5,16 +5,19 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start & node backend/server.js", 
+    "start": "next start & node backend/server.js",
     "lint": "next lint"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
+    "googleapis": "^144.0.0",
     "next": "14.2.11",
     "next-pwa": "^5.6.0",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/node": "^22.10.5",
     "eslint": "^8",
     "eslint-config-next": "14.2.11",
     "postcss": "^8",

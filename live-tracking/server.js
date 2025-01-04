@@ -1,25 +1,29 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import liveRoutes from './live.js';
+// const placesRoutes = require("./routes/places");
+// const searchRoutes = require("./routes/search");
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-
-// Middleware
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
 // Routes
-// app.use("/api/places", require("./routes/places"));
-// app.use("/api/search", require("./routes/search"));
-app.use("/api/live", require("./live"));
+// app.use("/api/places", placesRoutes);
+// app.use("/api/search", searchRoutes);
+app.use("/api/live", liveRoutes);
 
 // Default Route
 app.get("/", (req, res) => {
   res.send("Bus Live Tracking Backend is running!");
 });
 
-// Start Server
+// Server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

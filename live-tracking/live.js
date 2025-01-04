@@ -1,115 +1,90 @@
-const express = require('express');
-const { Pool } = require('pg');
-const fetch = require('node-fetch');
-const app = express();
+import express from 'express';
+import { google } from 'googleapis';
+import {updateLiveData, saveStopDataToSheet, getLiveData}  from "./liveDataStore.js"; 
 
-app.use(express.json());
+const router = express.Router();
 
-// Database connection pool
-const db = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'bus_tracking',
-    password: 'password',
-    port: 5432,
+// Load Google Sheets API credentials
+const auth = new google.auth.GoogleAuth({
+    keyFile: "./cred/key.json", // Replace with your JSON key file
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
-// In-memory storage for tracking stop states
-const liveBusData = new Map(); // { busId: { latitude, longitude, stopState: { placeName, arrivalTime } } }
+const sheets = google.sheets({ version: "v4", auth });
+const SHEET_ID = "1FwVNe6j4xN_ToGtCY3ju26BPCOfZ5RtNu2f4q0dhay4"; // Replace with your Google Sheet ID
+const RANGE = "Sheet1!A1:H1"; // Adjust the range as per your sheet
 
-// Utility: Reverse geocode latitude and longitude
-async function getPlaceName(latitude, longitude) {
+/**
+ * POST /live
+ * Handles live GPS updates.
+ * Body Parameters: { BusID, TimeStamp, Latitude, Longitude, UserID (optional) }
+ */
+router.post("/", async (req, res) => {
+    const { BusID, TimeStamp, Latitude, Longitude, UserID } = req.body;
+    console.log(req.body);
+
+    if (!BusID || !TimeStamp || !Latitude || !Longitude) {
+        return res.status(400).json({ error: "Missing required parameters..." });
+    }
+
     try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-        const data = await response.json();
-        return data.display_name || 'Unknown Location';
-    } catch (err) {
-        console.error('Error fetching place name:', err);
-        return 'Unknown Location';
+        // Update in-memory data
+        const stopData = updateLiveData(BusID, TimeStamp, Latitude, Longitude);
+
+        res.status(200).json({ message: "Live data processed successfully" });
+    } catch (error) {
+        console.error("Error processing live data:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
-}
+});
 
-// POST / to track live GPS data
-module.exports = async (req, res) => {
-    const { busId, latitude, longitude } = req.body;
+router.put("/", async (req, res) => {
+    const { BusID, JourneyDate, ArrivalTime, DepartureTime, StopName, Latitude, Longitude, UserID } = req.body;
+    console.log(req.body);
 
-    if (!busId || !latitude || !longitude) {
-        return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    const newEntry = { latitude, longitude, timestamp: Date.now() };
-
-    // Check if bus exists in liveBusData
-    if (liveBusData.has(busId)) {
-        const prevEntry = liveBusData.get(busId);
-        const distance = Math.sqrt(
-            Math.pow(prevEntry.latitude - latitude, 2) +
-            Math.pow(prevEntry.longitude - longitude, 2)
-        ) * 111139; // Approx meters
-
-        // If within 3 meters
-        if (distance <= 3) {
-            if (!prevEntry.stopState || !prevEntry.stopState.arrivalTime) {
-                // Mark arrival time
-                const placeName = await getPlaceName(latitude, longitude);
-                liveBusData.set(busId, {
-                    ...newEntry,
-                    stopState: {
-                        placeName,
-                        arrivalTime: new Date(),
-                    },
-                });
-            }
-        } else if (prevEntry.stopState && prevEntry.stopState.arrivalTime) {
-            // Mark departure time
-            const departureTime = new Date();
-
-            // Save to DB
-            const { placeName, arrivalTime } = prevEntry.stopState;
-            await db.query(
-                `INSERT INTO bus_stop_logs (bus_id, latitude, longitude, place_name, arrival_time, departure_time)
-                 VALUES ($1, $2, $3, $4, $5, $6)`,
-                [busId, latitude, longitude, placeName, arrivalTime, departureTime]
-            );
-
-            // Clear stop state
-            liveBusData.set(busId, { ...newEntry, stopState: null });
-        }
-    } else {
-        // Add new bus entry
-        liveBusData.set(busId, newEntry);
+    if (!BusID || !JourneyDate || !ArrivalTime || !DepartureTime || !StopName || !Latitude || !Longitude) {
+        return res.status(400).json({ error: "Missing required parameters..." });
     }
 
-    res.status(200).json({ message: 'GPS data processed successfully' });
-}
+    try {
+        // updating in sheet
+        const stopDetails = [
+            BusID,
+            JourneyDate,
+            StopName,
+            Latitude,
+            Longitude,
+            ArrivalTime,
+            DepartureTime,
+            UserID || req.ip, // Use provided UserID or fallback to IP
+        ];
 
-// Start server
-// app.listen(3000, () => {
-//     console.log('Server is running on port 3000');
-// });
+        await saveStopDataToSheet(sheets, SHEET_ID, RANGE, stopDetails);
 
+        res.status(200).json({ message: "Stop data processed successfully" });
+    } catch (error) {    
+        console.error("Error processing stop data:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
-// 2. Provide live GPS data for a specific bus
-// router.get("/:busId", (req, res) => {
-//   const { busId } = req.params;
-//   const liveData = liveBusData[busId];
+// GET: Retrieve last live status of a bus by BusID
+router.get('/:BusID', (req, res) => {
+    console.log(process.env.SHEET_ID);
+    const { BusID } = req.params;
+    console.log(req.params);
 
-//   if (!liveData) {
-//     return res.status(404).json({ error: "No live data found for the specified bus." });
-//   }
+    if (!BusID) {
+        return res.status(400).json({ error: 'BusID is required' });
+    }
 
-//   res.json({ busId, ...liveData });
-// });
+    const liveData = getLiveData(BusID);
 
-// module.exports = router;
+    if (!liveData) {
+        return res.status(404).json({ error: 'No live data found for the given BusID' });
+    }
 
-// app.get('/:busId', (req, res) => {
-//     const { busId } = req.params;
+    res.json({ message: 'Live data retrieved successfully', data: liveData });
+});
 
-//     if (!liveBusData.has(busId)) {
-//         return res.status(404).json({ error: 'No live data found for this bus' });
-//     }
-
-//     return res.status(200).json(liveBusData.get(busId));
-// });
-
+export default router;
