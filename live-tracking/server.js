@@ -1,12 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import dotenv from "dotenv";
 import liveRoutes from './live.js';
 // const placesRoutes = require("./routes/places");
 // const searchRoutes = require("./routes/search");
 
-dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -23,7 +21,9 @@ app.get("/", (req, res) => {
 });
 
 // Server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+export default app;

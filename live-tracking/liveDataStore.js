@@ -110,5 +110,3 @@ export async function saveStopDataToSheet(sheets, sheetId, range, data) {
 export function getLiveData(BusID) {
   return inMemoryData[BusID] || null;
 }
-
-// export default { updateLiveData, saveStopDataToSheet };
