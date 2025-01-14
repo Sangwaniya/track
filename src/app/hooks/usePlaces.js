@@ -9,7 +9,7 @@ const usePlaces = () => {
       if (cached) {
         setPlaces(JSON.parse(cached));
       } else {
-        const response = await fetch('http://localhost:8888/api/places');
+        const response = await fetch('https://sokibcw8dd.execute-api.us-east-1.amazonaws.com/dev/api/places');
         const data = await response.json();
         setPlaces(data);
         localStorage.setItem('places', JSON.stringify(data));
