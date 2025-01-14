@@ -35,17 +35,27 @@ export default function SearchPage() {
   }, []);
 
   if (loading) {
-    return <p>Loading routes...</p>;
+    return <div><p className="text-[#201d27] text-4xl font-semibold tracking-tight">Loading routes...</p></div>;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    // if(error === 'Failed to fetch bus routes') {
+    //   return <div className="text-[#201d27] text-4xl font-semibold tracking-tight">
+    //     <p >No Internet!!</p>
+    //     <p>Check your Connection.</p>
+    //     </div>
+    // }
+    return <div className="text-[#201d27] text-4xl font-semibold tracking-tight">
+    <p className='text-center mt-10'>You got us!!</p>
+    <p className='p-4 text-centre'>No data available for this route, we keep on adding thousands of routes.</p>
+    <p className='p-4 text-center'>See you later ♡</p>
+    </div>
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Bus Routes</h1>
-      <div className="grid gap-4">
+    <div className='bg-gray-100 rounded-3xl shadow-sm'>
+      <h1 className="p-4 text-[#201d27] text-4xl font-semibold tracking-tight">Available Buses</h1>
+      <div className="grid gap-4 rounded-3xl bg-[#e4e4e4]">
         {routes.map((route) => (
           <RouteCard key={route.id} route={route} />
         ))}

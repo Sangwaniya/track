@@ -7,9 +7,10 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Plae Logo icon here */}
           <a className="p-3 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors" href="/">
-            <svg className="h-6 w-6 text-yellow-500" viewBox="0 0 24 24">
+            {/* <svg className="h-6 w-6 text-yellow-500" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="4" fill="#yellow-500" />
-            </svg>
+            </svg> */}
+            <img src='https://img.icons8.com/?size=100&id=YyEbAVyRYrMX&format=png&color=000000' width={40} height={40}/>
           </a>
 
           {/* Profile Section */}

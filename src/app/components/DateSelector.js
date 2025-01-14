@@ -33,7 +33,7 @@ export default function DateSelector() {
           <div className="mt-4">
             <input
               type="datetime-local"
-              value={customDateTime}
+              value={customDateTime || new Date().toISOString().slice(0, 16)}
               onChange={(e) => setCustomDateTime(e.target.value)}
               className="w-full px-6 py-3 bg-white rounded-full text-sm border-0 focus:ring-2 focus:ring-[#201d27] placeholder-gray-400"
             />
