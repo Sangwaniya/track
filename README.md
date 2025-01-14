@@ -148,3 +148,5 @@ backend :
 - Replace `busId`, `latitude`, `longitude`, etc., in the examples with actual values.
 - Ensure the server is live and accessible for testing.
 - Use tools like Postman, Curl, or frontend forms to interact with the API.
+
+Color Schemes :- mild dark: [#e4e4e4], dark-[#201d27]

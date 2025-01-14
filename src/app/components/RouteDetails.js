@@ -1,21 +1,66 @@
-// src/app/components/RouteDetails.js
-export default function RouteDetails({ stops }) {
+import router from "next/router";
+export default function RouteDetails({ stops, onClose }) {
   return (
-    <div className="mt-4">
-      <h3 className="text-lg font-semibold">Route Details</h3>
-      <ul className="mt-2">
-        {stops.map((stop) => (
-          <li key={stop.id} className="border-b py-2">
-            <div>
-              <span className="font-bold">{stop.place.name}</span> -{' '}
-              <span className="text-sm text-gray-600">{stop.place.location}</span>
-            </div>
-            <div>
-              Expected at: {new Date(stop.expectedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 "
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-3xl p-6 w-full max-w-md shadow-xl"
+        onClick={(e) => e.stopPropagation()} // Prevent click on modal from closing it
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold">Route Details</h3>
+          <button
+            className="p-2  rounded-full bg-[#201d27] "
+            onClick={onClose}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <ul className="space-y-4">
+          {stops.map((stop, index) => (
+            <li
+              key={stop.id}
+              className={`relative pl-8 ${index !== stops.length - 1 ? 'pb-4' : ''}`}
+            >
+              {index !== stops.length - 1 && (
+                <div className="absolute left-3 top-5 w-0.5 h-full bg-gray-200" />
+              )}
+              <div className="absolute left-2 top-2 w-2 h-2 rounded-full bg-[#201d27]" />
+              <div>
+                <span className="font-medium">{stop.place.name}</span>
+                <p className="text-sm text-gray-600">{stop.place.location}</p>
+              </div>
+              <div className="text-sm text-gray-500 mt-1">
+                Expected at:{" "}
+                {new Date(stop.expectedAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+            </li>
+          ))}
+        </ul>
+      <button
+        className="block mt-4 px-4 py-2 bg-[#201d27] text-white text-xl rounded-3xl hover:bg-[#e7ff3d] hover:text-[#201d27] transition-colors"
+        // onClick={() => router.push('/live')}
+      >
+        Check Live Status
+      </button>
+      </div>
     </div>
   );
 }
