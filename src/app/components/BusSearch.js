@@ -101,9 +101,9 @@ export default function BusSearch() {
 
   return (
     <div>
-      <div className="pt-8 pb-6 px-8">
+      <div className="pt-8 pb-6 px-6">
         <h1 className="text-[#201d27] text-4xl font-semibold tracking-tight">
-          Get your Roadways
+          Search Roadways
         </h1>
       </div>
       <DateSelector />

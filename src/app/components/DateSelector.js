@@ -11,7 +11,7 @@ export default function DateSelector() {
   ];
 
   return (
-    <div className="p-8">
+    <div className="py-8 px-6">
       {/* <div className="rounded-3xl bg-[#e4e4e4] p-6"> */}
         <div className="flex gap-3 overflow-x-auto">
           {options.map((option) => (

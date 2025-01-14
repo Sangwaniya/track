@@ -6,14 +6,10 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Plae Logo icon here */}
-          <a className="p-3 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors" href = "/">
-            {/* <svg className="h-6 w-6 text-yellow-500" viewBox="0 0 24 24">
-              <path d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10zm0-2c-6.6 0-12 5.4-12 12s5.4 12 12 12 12-5.4 12-12-5.4-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z" />
-            </svg> */}
-            <img
-              src="/logo.png"
-              className="h-6 w-6"
-            />
+          <a className="p-3 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors" href="/">
+            <svg className="h-6 w-6 text-yellow-500" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4" fill="#yellow-500" />
+            </svg>
           </a>
 
           {/* Profile Section */}
@@ -21,7 +17,7 @@ export default function Header() {
             <div className="flex-shrink-0">
               <div className="h-10 w-10 rounded-full overflow-hidden">
                 <img
-                  src="/profile-placeholder.jpg"
+                  src="https://i.pinimg.com/736x/19/0a/10/190a10c77e85deed8d5004dd25cd422e.jpg"
                   alt="Profile"
                   width={40}
                   height={40}
@@ -30,8 +26,8 @@ export default function Header() {
               </div>
             </div>
             <div className="flex flex-col pr-2">
-              <span className="text-sm font-medium text-gray-900">{user?.name || 'Login/Signup'}</span>
-              <span className="text-xs text-gray-500">{user?.accountType || 'with TrueCaller'}</span>
+              <span className="text-sm font-medium text-gray-900">{user?.name || 'Guest Account'}</span>
+              <span className="text-xs text-gray-500">{user?.accountType || 'Login/Signup'}</span>
             </div>
           </div>
         </div>

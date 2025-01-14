@@ -24,10 +24,10 @@ export default function RouteCard({ route }) {
   };
 
   return (
-    <div className="border p-4 rounded-md shadow-md">
+    <div className="border p-4 rounded-3xl shadow-md">
       <div className="flex justify-between">
         <div>
-          <h2 className="font-bold">{firstStop.place.name} - {lastStop.place.name}</h2>
+          <h1 className="font-semibold">{firstStop.place.name} - {lastStop.place.name}</h1>
           <p>{formatTime(firstStop.expectedAt)} - {formatTime(lastStop.expectedAt)}</p>
         </div>
         <div>
@@ -35,7 +35,7 @@ export default function RouteCard({ route }) {
         </div>
       </div>
       <button
-        className="mt-4 text-blue-500 underline"
+        className="mt-4 text-blue-500"
         onClick={toggleDetails}
       >
         {showDetails ? 'Hide Details' : 'Show Details'}
