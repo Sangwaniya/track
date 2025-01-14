@@ -38,3 +38,4 @@ next-env.d.ts
 
 # env variables 
 /live-tracking/cred
+live-tracking/sheettojson.js

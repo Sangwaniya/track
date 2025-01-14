@@ -24,7 +24,7 @@ export default function RouteCard({ route }) {
   };
 
   return (
-    <div className="border p-4 rounded shadow-md">
+    <div className="border p-4 rounded-md shadow-md">
       <div className="flex justify-between">
         <div>
           <h2 className="font-bold">{firstStop.place.name} - {lastStop.place.name}</h2>

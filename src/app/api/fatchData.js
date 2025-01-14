@@ -1,13 +1,26 @@
+import { useState, useEffect } from 'react';
 // https://github.com/jagmitswami/roadways
-const BASE_URL = 'http://3.82.222.78:8080'; 
+const BASE_URL = 'https://sokibcw8dd.execute-api.us-east-1.amazonaws.com/dev'; 
 
-export const fetchPlaces = async () => {
-  const response = await fetch(`${BASE_URL}/api/places`); 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Failed to fetch buses');
-  }
-  return response.json();
+export const fetchPlaces = (source) => {
+  const [places, setPlaces] = useState([]);
+  console.log(source);
+    useEffect(() => {
+      const fetchPlaces = async () => {
+        const cached = localStorage.getItem('places');
+        if (cached) {
+          setPlaces(JSON.parse(cached));
+        } else {
+          const response = await fetch(`${BASE_URL}/api/places`);
+          const data = await response.json();
+          setPlaces(data);
+          localStorage.setItem('places', JSON.stringify(data));
+        }
+      };
+      fetchPlaces();
+    }, []);
+  
+    return places;
 };
 
 export const fetchBusRoutes = async (source, destination) => {
