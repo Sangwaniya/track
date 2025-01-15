@@ -62,8 +62,8 @@ export default function RouteCard({ route }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex  justify-center p-4">
-      <div className="bg-[#e4e4e4] rounded-3xl p-6 w-full max-w-sm shadow-lg">
+    <div className="bg-gray-100 flex  justify-center p-4">
+      <div className="bg-[#e4e4e4] rounded-3xl p-6 w-full shadow-lg">
         <div className="flex justify-between items-start mb-6">
           <div className="space-y-4">
             <h1 className="text-2xl font-bold">
@@ -107,10 +107,10 @@ export default function RouteCard({ route }) {
             {/* Content */}
             <div className="relative h-full flex items-center justify-between px-4">
               <div className="flex items-center gap-3" >
-                <div className="bg-white p-3 rounded-3xl shadow-md" style={{ transform: `translateX(${sliderValue*2}px)` }}>
+                <div className="bg-white p-3 rounded-3xl shadow-md" style={{ transform: `translateX(${sliderValue*4}px)` }}>
                   <LockIcon className="w-5 h-5" />
                 </div>
-                <span className="text-gray-400 font-medium">Slide for details</span>
+                <span className="text-gray-400 font-medium">Slide Lock to open route details</span>
               </div>
             
               <div className="flex items-center gap-0.5">

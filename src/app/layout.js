@@ -16,7 +16,7 @@ export default function Layout({ children }) {
         <link rel="icon" href="/favicon.ico" />
         <title>{metadata.title}</title>
       </head>
-      <body>
+      <body className='max-w-xl mx-auto'>
         <Header />
         <main className="p-4">
           {children}
