@@ -1,5 +1,7 @@
+'use client';
 import router from "next/router";
-export default function RouteDetails({ stops, onClose }) {
+import { fetchLiveBusData } from "../api/fatchData";
+export default function RouteDetails({ route, onClose }) {
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 "
@@ -31,12 +33,12 @@ export default function RouteDetails({ stops, onClose }) {
           </button>
         </div>
         <ul className="space-y-4">
-          {stops.map((stop, index) => (
+          {route.stops.map((stop, index) => (
             <li
               key={stop.id}
-              className={`relative pl-8 ${index !== stops.length - 1 ? 'pb-4' : ''}`}
+              className={`relative pl-8 ${index !== route.stops.length - 1 ? 'pb-4' : ''}`}
             >
-              {index !== stops.length - 1 && (
+              {index !== route.stops.length - 1 && (
                 <div className="absolute left-3 top-5 w-0.5 h-full bg-gray-200" />
               )}
               <div className="absolute left-2 top-2 w-2 h-2 rounded-full bg-[#201d27]" />
@@ -56,11 +58,32 @@ export default function RouteDetails({ stops, onClose }) {
         </ul>
       <button
         className="block mt-4 px-4 py-2 bg-[#201d27] text-white text-xl rounded-3xl hover:bg-[#e7ff3d] hover:text-[#201d27] transition-colors"
-        // onClick={() => router.push('/live')}
+        onClick={() => {
+          fetch('https://livebus-backend-3gj7nf4q9-mohit-sangwans-projects.vercel.app/', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Add this if cookies are used
+          })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) => console.error('Error:', error));
+        }}
       >
         Check Live Status
       </button>
       </div>
     </div>
   );
+}
+
+function handleliveStatus(id){
+  console.log(id);
+  try{
+    const data = fetchLiveBusData(id);
+    console.log(data);
+  }catch(err){
+    console.log(err);
+  }
 }

@@ -63,7 +63,7 @@ export default function RouteCard({ route }) {
 
   return (
     <div className="bg-gray-100 flex  justify-center p-4">
-      <div className="bg-[#e4e4e4] rounded-3xl p-6 w-full shadow-lg">
+      <div className="bg-[#e4e4e4] rounded-3xl p-3 w-full shadow-lg">
         <div className="flex justify-between items-start mb-6">
           <div className="space-y-4">
             <h1 className="text-2xl font-bold">
@@ -80,19 +80,20 @@ export default function RouteCard({ route }) {
               <p className="text-xl">{formatDuration(travelTime)}</p>
             </div>
           </div>
-          <button className="bg-black rounded-full p-2" onClick={toggleDetails}>
+          <button className="bg-black rounded-full p-4" onClick={toggleDetails}>
             <ArrowIcon className="w-5 h-5 text-white" />
           </button>
         </div>
 
         {/* Slider Section */}
-        <div className="mt-8 relative">
+        <div className="mt-8 relative max-w-[70vw] pr-12">
           <div
             className="relative h-16 rounded-3xl overflow-hidden"
             style={{
-              background: 'rgba(0, 0, 0, 0.05)',
+              backgroundColor: 'rgba(0, 0, 0, 0.05)', // background color transparent
               backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)'
+              WebkitBackdropFilter: 'blur(8px)',
+              boxShadow: '0 0 0 1px rgba(0, 128, 255, 0.2)' // add a blue shadow effect
             }}
           >
             {/* Slider Track */}
@@ -105,26 +106,26 @@ export default function RouteCard({ route }) {
             />
 
             {/* Content */}
-            <div className="relative h-full flex items-center justify-between px-4">
-              <div className="flex items-center gap-3" >
-                <div className="bg-white p-3 rounded-3xl shadow-md" style={{ transform: `translateX(${sliderValue*4}px)` }}>
-                  <LockIcon className="w-5 h-5" />
+            <div className="relative h-full flex items-center justify-between pl-1 pr-4 rounded-3xl">
+              <div className="flex items-center gap-3 rounded-3xl" >
+                <div className="bg-white p-4 rounded-3xl shadow-md" style={{ transform: `translateX(${sliderValue*2}px)` }}>
+                  <LockIcon className="w-6 h-6" />
                 </div>
-                <span className="text-gray-400 font-medium">Slide Lock to open route details</span>
+                <span className="text-gray-400 text-sm font-light">Slide to open</span>
               </div>
             
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3].map((_, index) => (
                   <span
                     key={index}
-                    className="text-gray-600 transition-all duration-300"
+                    className="text-[#201d27] transition-all duration-300"
                     style={{
                       opacity: 0.3 + (index * 0.2) + (sliderValue / 200),
-                      transform: `scale(${0.8 + (index * 0.1) + (sliderValue / 500)})`,
+                      transform: `scale(${1 + (index * 0.2)})`, // increase scale value for each element
                       marginLeft: `${index * 2}px`
                     }}
                   >
-                    {'>'}
+                    {'> '}
                   </span>
                 ))}
               </div>
@@ -146,7 +147,7 @@ export default function RouteCard({ route }) {
 
       {showDetails && (
         <RouteDetails
-          stops={route.stops}
+          route={route}
           onClose={() => setShowDetails(false)}
         />
       )}

@@ -96,6 +96,8 @@ export default function BusSearch() {
     const destinationId = places.find((p) => p.name === destination)?.id;
     if (sourceId && destinationId) {
       router.push(`/search?source=${sourceId}&destination=${destinationId}`);
+    } else {
+      showToast('Select stops from list.');
     }
   };
 
@@ -151,3 +153,15 @@ export default function BusSearch() {
     </div>
   );
 }
+
+export function showToast(message, bgColor) {
+  const toast = document.createElement('div');
+  toast.className = 'fixed top-0 left-1/2 transform -translate-x-1/2 p-4 m-2 text-white rounded-3xl animate-toast-in';
+  toast.textContent = message;
+  toast.style.backgroundColor = bgColor ? bgColor : '#201d27';
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    document.body.removeChild(toast);
+  }, 2500);
+}
+
