@@ -58,7 +58,7 @@ export default function SearchPage() {
   return (
     <div className='bg-gray-100 rounded-3xl shadow-sm'>
       <h1 className="p-4 pl-6 text-[#201d27] text-4xl font-semibold tracking-tight">Available Buses</h1>
-      <div className="grid gap-4 rounded-3xl bg-[#e4e4e4]">
+      <div className="grid rounded-3xl bg-[#e4e4e4]">
         {routes.map((route) => (
           <RouteCard key={route.id} route={route} />
         ))}
