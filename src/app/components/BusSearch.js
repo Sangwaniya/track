@@ -47,7 +47,7 @@ export default function BusSearch() {
       // console.log("Filtering suggestions...");
       if (query) {
         const filtered = places.filter((place) =>
-          place.name.toLowerCase().includes(query.toLowerCase())
+          place.location.toLowerCase().includes(query.toLowerCase())
         );
         setSuggestions(filtered);
       } else {
@@ -77,14 +77,14 @@ export default function BusSearch() {
   // Handle source selection
   const handleSourceSelect = (place) => {
     // console.log("Handling source select...");
-    setSource(place.name);
+    setSource(place.location);
     setSourceSuggestions([]);
   };
 
   // Handle destination selection
   const handleDestinationSelect = (place) => {
     // console.log("Handling destination select...");
-    setDestination(place.name);
+    setDestination(place.location);
     setDestinationSuggestions([]);
   };
 
