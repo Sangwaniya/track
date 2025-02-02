@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { fetchBusRoutes } from "../api/fatchData";
 // import RouteDetails from "./components/RouteDetails";
 
 const BASE_URL =
@@ -31,27 +32,27 @@ export default function LivePage({ routeId }) {
             );
         }
     }
-    useEffect(() => {
-        // Fetch live route data
-        const fetchRouteData = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`${BASE_URL}/${routeId}`);
-                console.log("url: ", `${BASE_URL}/${routeId}`);
-                if (!response.ok) {
-                    console.log(response);
-                    throw new Error("Failed to check Bus Live status. Please try again.");
-                }
-                const data = await response.json();
-                setRouteData(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
+    const fetchRouteData = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${BASE_URL}/${routeId}`);
+            console.log("url: ", `${BASE_URL}/${routeId}`);
+            if (!response.ok) {
+                console.log(response);
+                throw new Error("Failed to check Bus Live status. Please try again.");
             }
-        };
-
-        fetchRouteData();
+            const data = await response.json();
+            setRouteData(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        if (routeId) {
+            fetchRouteData();
+        }
     }, [routeId]);
 
     if (loading) {
