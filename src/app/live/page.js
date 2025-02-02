@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { fetchBusRoutes } from "../api/fatchData";
-// import RouteDetails from "./components/RouteDetails";
 
 const BASE_URL =
     "https://livebus-backend-rc8readx3-mohit-sangwans-projects.vercel.app/api/live";
@@ -10,9 +8,12 @@ export default function LivePage({ routeId }) {
     const [routeData, setRouteData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    if (!routeId) {
-        const urlParams = new URLSearchParams(window.location.search);
-        routeId = urlParams.get('live');
+
+    useEffect(() => {
+        if (!routeId) {
+            const urlParams = new URLSearchParams(window.location.search);
+            routeId = urlParams.get('live');
+        }
 
         if (!routeId) {
             let countdown = 5;
@@ -24,21 +25,17 @@ export default function LivePage({ routeId }) {
                     window.location.href = '/';
                 }
             }, 1000);
-            return (
-                <div className="text-center text-gray-500 mt-10">
-                    <div className="text-center text-gray-500 mt-10">First select a route to check the live status of bus.</div>
-                    <div id="countdown">Redirecting to search page in 5...</div>
-                </div>
-            );
+        } else {
+            fetchRouteData(routeId);
         }
-    }
-    const fetchRouteData = async () => {
+    }, [routeId]);
+
+    const fetchRouteData = async (routeId) => {
         try {
             setLoading(true);
             const response = await fetch(`${BASE_URL}/${routeId}`);
             console.log("url: ", `${BASE_URL}/${routeId}`);
             if (!response.ok) {
-                console.log(response);
                 throw new Error("Failed to check Bus Live status. Please try again.");
             }
             const data = await response.json();
@@ -49,9 +46,6 @@ export default function LivePage({ routeId }) {
             setLoading(false);
         }
     };
-    useEffect(() => {
-      fetchRouteData();
-    }, [routeId]);
 
     if (loading) {
         return <div className="text-center mt-10">Loading route details...</div>;
@@ -61,7 +55,7 @@ export default function LivePage({ routeId }) {
         return <div className="text-center text-red-500 mt-10">{error}</div>;
     }
 
-    if (routeData.message === "No live data for the given RouteID") {
+    if (routeData?.message === "No live data for the given RouteID") {
         return <div className="text-center text-gray-500 mt-10">No Live data available.</div>;
     }
 
