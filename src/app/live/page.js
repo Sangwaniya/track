@@ -50,9 +50,7 @@ export default function LivePage({ routeId }) {
         }
     };
     useEffect(() => {
-        if (routeId) {
-            fetchRouteData();
-        }
+      fetchRouteData();
     }, [routeId]);
 
     if (loading) {
