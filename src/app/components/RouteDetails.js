@@ -63,8 +63,7 @@ export default function RouteDetails({ route, onClose }) {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-            },
-            credentials: 'include', // Add this if cookies are used
+            }
           })
           .then((response) => response.json())
           .then((data) => console.log(data))
