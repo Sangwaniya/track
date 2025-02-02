@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -15,11 +15,27 @@ export default function ContributePage({ routeId: propRouteId, routeDetails: pro
   const [lastUpdateTime, setLastUpdateTime] = useState("Sending first request...");
   const [placeDetails, setPlaceDetails] = useState(null);
   const [error, setError] = useState(null);
-  const [connectivity, setConnectivity] = useState(navigator.onLine);
+  const [connectivity, setConnectivity] = useState(null);
   const [queue, setQueue] = useState([]);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [nextStop, setNextStop] = useState(null);
   let isFetching = false;
+
+  useEffect(() => {
+    // Update connectivity status
+    setConnectivity(navigator.onLine);
+
+    const handleOnline = () => setConnectivity(true);
+    const handleOffline = () => setConnectivity(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Get route ID and details from URL if not provided
   useEffect(() => {
