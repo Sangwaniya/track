@@ -1,16 +1,17 @@
 "use client";
 import { useState, useEffect } from 'react';
 import RouteDetails from './RouteDetails';
+import { useRouter } from 'next/navigation';
 
 const LockIcon = () => (
-  <svg 
-    width="20" 
-    height="20" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
   >
     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -18,14 +19,14 @@ const LockIcon = () => (
   </svg>
 );
 const ArrowIcon = () => (
-  <svg 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="white" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="white"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
   >
     <line x1="7" y1="17" x2="17" y2="7" />
@@ -36,29 +37,43 @@ const ArrowIcon = () => (
 export default function RouteCard({ route }) {
   const [sliderValue, setSliderValue] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
+  const router = useRouter();
+
+  const handleLive = (route) => {
+    localStorage.setItem('currentRoute', JSON.stringify(route));
+    // Navigate to the LivePage with the route as state
+    router.push(`/live/${route.id}?previousPath=${encodeURIComponent(window.location.pathname)}`);
+  };
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
   useEffect(() => {
     if (sliderValue === 100) {
-      setShowDetails(true);
+      handleLive(route);
       setSliderValue(0);
     }
   }, [sliderValue]);
 
   const firstStop = route.stops[0];
   const lastStop = route.stops[route.stops.length - 1];
-  const travelTime = new Date(lastStop.expectedAt) - new Date(firstStop.expectedAt);
+  const travelTime = lastStop.expectedAt - firstStop.expectedAt;
 
   const formatTime = (time) => {
-    return new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    const date = new Date(time * 1000);
+    
+    return date.toLocaleTimeString('en-IN', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: false,
+      timeZone: 'Asia/Kolkata'
+    });
   };
 
-  const formatDuration = (milliseconds) => {
-    const minutes = Math.floor(milliseconds / 60000);
-    const hours = Math.floor(minutes / 60);
-    return `${hours}h ${minutes % 60}m`;
+  const formatDuration = (travelTime) => {
+    const hours = Math.floor(travelTime / 3600);
+    const minutes = Math.floor((travelTime % 3600) / 60);
+    return `${hours}h ${minutes}m`;
   };
 
   return (
@@ -67,7 +82,7 @@ export default function RouteCard({ route }) {
         <div className="flex justify-between items-start mb-6">
           <div className="space-y-4">
             <h1 className="text-2xl font-bold">
-              {firstStop.place.name} - {lastStop.place.name}
+              {firstStop.place.location} - {lastStop.place.location}
             </h1>
             <div className="space-y-1">
               <p className="text-gray-600">Departure - Arrival</p>
@@ -108,12 +123,12 @@ export default function RouteCard({ route }) {
             {/* Content */}
             <div className="relative h-full flex items-center justify-between pl-1 pr-4 rounded-3xl">
               <div className="flex items-center gap-3 rounded-3xl" >
-                <div className="bg-white p-4 rounded-3xl shadow-md" style={{ transform: `translateX(${sliderValue*2}px)` }}>
+                <div className="bg-white p-4 rounded-3xl shadow-md" style={{ transform: `translateX(${sliderValue * 2}px)` }}>
                   <LockIcon className="w-6 h-6" />
                 </div>
-                <span className="text-gray-400 text-sm font-light">Slide to open</span>
+                <span className="text-gray-400 text-sm font-light">Slide for Live status</span>
               </div>
-            
+
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3].map((_, index) => (
                   <span
@@ -148,6 +163,7 @@ export default function RouteCard({ route }) {
       {showDetails && (
         <RouteDetails
           route={route}
+          handleLive={handleLive}
           onClose={() => setShowDetails(false)}
         />
       )}

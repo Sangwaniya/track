@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const BASE_URL = "https://livebus-backend-3gj7nf4q9-mohit-sangwans-projects.vercel.app/api/live";
+const BASE_URL = "https://livebus-backend-rc8readx3-mohit-sangwans-projects.vercel.app/api/live";
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse";
 const ONE_KM = 0.01; // Approximate latitude/longitude difference for 1 km
 
@@ -74,7 +74,7 @@ export default function ContributePage({ routeId: propRouteId, routeDetails: pro
         (position) => {
           const { latitude, longitude } = position.coords;
           setPermissionGranted(true);
-          setLocation({ latitude, longitude, timestamp: new Date().toISOString() });
+          setLocation({ latitude, longitude, timestamp: Math.floor(Date.now() / 1000) });
         },
         (err) => {
           setPermissionGranted(false);

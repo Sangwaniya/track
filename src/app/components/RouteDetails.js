@@ -1,7 +1,8 @@
 'use client';
 import router from "next/router";
-import { fetchLiveBusData } from "../api/fatchData";
-export default function RouteDetails({ route, onClose }) {
+
+import LivePage from "../live/[id]/page";
+export default function RouteDetails({ route, onClose, handleLive }) {
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 "
@@ -48,41 +49,23 @@ export default function RouteDetails({ route, onClose }) {
               </div>
               <div className="text-sm text-gray-500 mt-1">
                 Expected at:{" "}
-                {new Date(stop.expectedAt).toLocaleTimeString([], {
+                {new Date(stop.expectedAt * 1000 ).toLocaleTimeString('en-IN', {
                   hour: "2-digit",
                   minute: "2-digit",
+                  hour12: false,
+                  timeZone: 'Asia/Kolkata'
                 })}
               </div>
             </li>
           ))}
         </ul>
-      <button
-        className="block mt-4 px-4 py-2 bg-[#201d27] text-white text-xl rounded-3xl hover:bg-[#e7ff3d] hover:text-[#201d27] transition-colors"
-        onClick={() => {
-          fetch('https://livebus-backend-3gj7nf4q9-mohit-sangwans-projects.vercel.app/', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          })
-          .then((response) => response.json())
-          .then((data) => console.log(data))
-          .catch((error) => console.error('Error:', error));
-        }}
-      >
-        Check Live Status
-      </button>
+        <button
+          className="block mt-4 px-4 py-2 bg-[#201d27] text-white text-xl rounded-3xl hover:bg-[#e7ff3d] hover:text-[#201d27] transition-colors"
+          onClick={() => handleLive(route)}
+        >
+          Check Live Status
+        </button>
       </div>
     </div>
   );
-}
-
-function handleliveStatus(id){
-  console.log(id);
-  try{
-    const data = fetchLiveBusData(id);
-    console.log(data);
-  }catch(err){
-    console.log(err);
-  }
 }
