@@ -11,9 +11,9 @@ const PlaceSuggestions = ({ suggestions, onSelect }) => {
               className="p-3 hover:bg-gray-200 cursor-pointer"
               onClick={() => onSelect(suggestion)}
             >
-              <span className="font-semibold">{suggestion.name}</span>
+              <span className="font-semibold">{suggestion.location}</span>
               <br />
-              <span className="text-sm text-gray-500">{suggestion.location}</span>
+              <span className="text-sm text-gray-500">{suggestion.district}</span>
             </li>
           ))}
         </ul>

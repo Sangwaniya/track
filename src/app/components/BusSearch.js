@@ -77,14 +77,14 @@ export default function BusSearch() {
   // Handle source selection
   const handleSourceSelect = (place) => {
     // console.log("Handling source select...");
-    setSource(place.location);
+    setSource(place);
     setSourceSuggestions([]);
   };
 
   // Handle destination selection
   const handleDestinationSelect = (place) => {
     // console.log("Handling destination select...");
-    setDestination(place.location);
+    setDestination(place);
     setDestinationSuggestions([]);
   };
 
@@ -92,10 +92,8 @@ export default function BusSearch() {
   const handleSubmit = (e) => {
     // console.log("Handling form submit...");
     e.preventDefault();
-    const sourceId = places.find((p) => p.name === source)?.id;
-    const destinationId = places.find((p) => p.name === destination)?.id;
-    if (sourceId && destinationId) {
-      router.push(`/search?source=${sourceId}&destination=${destinationId}`);
+    if (source.id && destination.id) {
+      router.push(`/search?source=${source.id}&destination=${destination.id}`);
     } else {
       showToast('Select stops from list.');
     }
@@ -114,7 +112,7 @@ export default function BusSearch() {
           <input
             type="text"
             className="w-full mt-4 px-8 py-5 bg-white rounded-full text-lg border-0 focus:ring-2 focus:ring-[#201d27] placeholder-gray-400 shadow-sm"
-            value={source}
+            value={source.location}
             onChange={handleSourceChange}
             placeholder="From"
             minLength={3}
@@ -130,7 +128,7 @@ export default function BusSearch() {
           <input
             type="text"
             className="w-full px-8 py-5 bg-white rounded-full text-lg border-0 focus:ring-2 focus:ring-[#201d27] placeholder-gray-400 shadow-sm"
-            value={destination}
+            value={destination.location}
             onChange={handleDestinationChange}
             placeholder="To..."
             minLength={3}
